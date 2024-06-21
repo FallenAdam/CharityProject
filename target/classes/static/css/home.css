@@ -1,0 +1,59 @@
+/* Custom Navbar Styles */
+
+body {
+    height: 100vh; /* Set height to 100% of the viewport height */
+    background-size: cover; /* Ensure the image covers the whole body */
+    background-position: center; /* Center the image */
+    background-image: url('../images/bg.jpg'); /* Path to your image, URL encoded if needed */
+    background-repeat: no-repeat; /* Ensure the image doesn't repeat */
+    background-attachment: fixed;
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    font-size: large;
+    text-decoration: none;
+}
+.site-navbar {
+    background-color: #c2f1c2; /* Light gray background */
+    border-bottom: 1px solid #dee2e6; /* Light border */
+    padding: 10px 0; /* Padding top and bottom */
+}
+.site-logo a {
+    font-size: 1.8rem; /* Larger font size */
+    font-weight: bold; /* Bold font weight */
+    color: #343a40; /* Dark text color */
+    text-decoration: none; /* Remove underline */
+}
+.right-cta-menu {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.right-cta-menu a {
+    margin-left: 15px; /* Spacing between menu items */
+    text-decoration: none; /* Remove underline */
+}
+.right-cta-menu .btn {
+    border-radius: 20px; /* Rounded corners */
+}
+.right-cta-menu a:hover {
+    background-color: #007bff; /* Darker blue on hover */
+    color: white; /* White text on hover */
+}
+.site-menu-toggle {
+    color: #5a5a5a; /* Dark gray color */
+}
+@media (max-width: 991.98px) {
+    .site-logo {
+        text-align: center; /* Center align on mobile */
+        margin-bottom: 10px; /* Space below logo */
+    }
+    .right-cta-menu {
+        flex-direction: column; /* Stack items vertically */
+        align-items: flex-start; /* Left align items */
+        margin-top: 10px; /* Space above items */
+    }
+    .right-cta-menu a {
+        margin: 5px 0; /* Space between items */
+    }
+
+}

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website for Donation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body id="top">
+<div class="site-wrap">
+
+    <!-- NAVBAR -->
+    <header class="site-navbar">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="site-logo col-12 col-lg-3">
+                    <a href="#" class="text-decoration-none">Website Quyên Góp</a>
+                </div>
+                <div class="right-cta-menu text-right col-12 col-lg-9">
+                    <div class="ml-auto d-flex align-items-center">
+                        <!-- Check if user is authenticated -->
+                        <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
+                            <!-- Display user's full name and link to profile -->
+                            <a th:text="${session.user.fullName}"
+                               th:href="@{/user/info/{id}(id=${session.user.id})}"
+                               class="btn btn-outline-primary border-width-2 d-none d-lg-inline-block me-3">Welcome, User</a>
+
+                            <!-- Admin links -->
+                            <div sec:authorize="hasAuthority('Admin')" class="d-flex align-items-center">
+                                <a class="btn btn-outline-primary border-width-2 d-none d-lg-inline-block me-3" th:href="@{/admin/account}">Quản lý người dùng</a>
+                                <a class="btn btn-outline-primary border-width-2 d-none d-lg-inline-block me-3" th:href="@{/admin/donation}">Quản lý đợt quyên góp</a>
+                            </div>
+
+                            <!-- User logout button -->
+                            <a th:href="@{/perform_logout}" class="btn btn-primary border-width-2 d-none d-lg-inline-block">Log Out</a>
+                        </div>
+                    </div>
+
+                    <!-- Login link for anonymous users -->
+                    <div sec:authorize="isAnonymous()">
+                        <a th:href="@{/login}" class="btn btn-primary border-width-2 d-none d-lg-inline-block">
+                            <span class="mr-2 icon-lock_outline"></span>Log In
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hamburger menu toggle button -->
+                <a href="#" class="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ms-3">
+                    <span class="icon-menu h3 m-0 p-0 mt-2"></span>
+                </a>
+            </div>
+        </div>
+    </header>
+    <!-- HOME -->
+    <section class="site-section">
+        <div class="container">
+
+            <div class="row mb-5 justify-content-center">
+                <div class="col-md-7 text-center">
+                    <h2 class="section-title mb-2">Các đợt quyên góp</h2>
+                </div>
+            </div>
+
+            <ul class="job-listings mb-5">
+                <input type="hidden" th:value="${listDonation.content.size()}" id="dodai" />
+                <th:block th:each="donation : ${listDonation.content}">
+                    <li style="margin-bottom: 20px" class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+                        <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+                            <div class="job-listing-position custom-width mb-3 mb-sm-10" style="padding: 10px;width: 250px">
+                                <a th:href="@{/detail(donationId=${donation.id})}">
+                                    <p th:text="${donation.name}" style="color: royalblue"></p>
+                                </a><br>
+                                <div>
+                                    <th:block th:switch="${donation.status}">
+                                        <div th:case="0">Mới tạo</div>
+                                        <div th:case="1">Đang quyên góp</div>
+                                        <div th:case="2">Đã đóng</div>
+                                        <div th:case="3">Đã đóng</div>
+                                    </th:block>
+                                </div>
+                            </div>
+                            <div class="job-listing-location mb-3 mb-sm-0 custom-width w-10" style="padding: 10px;">
+                                Ngày bắt đầu<br>
+                                <strong th:text="${#dates.format(donation.startDate, 'dd-MMM-yyyy')}"></strong><br>
+                            </div>
+                            <div class="job-listing-location mb-3 mb-sm-0 custom-width w-10" style="padding: 10px;">
+                                Ngày kết thúc<br>
+                                <strong th:text="${#dates.format(donation.endDate, 'dd-MMM-yyyy')}"></strong><br>
+                            </div>
+                            <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25" style="padding: 10px;">
+                                <span class="icon-room"></span> <span th:text="${donation.organizationName}"></span><br>
+                                <strong th:text="${donation.phoneNumber}"></strong><br>
+                            </div>
+                            <div class="job-listing-location mb-3 mb-sm-0 custom-width" style="padding: 10px; width: 120px">
+                                <div th:if="${donation.status == 1}">
+                                    <div sec:authorize="isAuthenticated()">
+                                        <button type="button" style="width: 105px" class="btn btn-primary py-2"
+                                                data-bs-toggle="modal"
+                                                th:data-bs-target="'#exampleModal'+${donation.id}">
+                                            Quyên góp
+                                        </button>
+                                    </div>
+                                    <div sec:authorize="isAnonymous()">
+                                        <button type="button" style="width: 105px" class="btn btn-primary py-2"
+                                                onclick="window.location.href='/login'">
+                                            Quyên góp
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Modal -->
+                    <div class="modal fade" th:id="'exampleModal'+${donation.id}" tabindex="-1"
+                         role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Quyên góp: <span th:text="${donation.name}"></span></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                                <form class="donationForm" method="post" th:action="@{/ql-donation/createDonationDetail}">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label for="addname" class="col-form-label">Họ tên:</label>
+                                                <input type="text" class="form-control" id="addname" name="name" placeholder="" required>
+                                                <label for="addmoney" class="col-form-label">Số tiền quyên góp:</label>
+                                                <input type="number" class="form-control" placeholder="" id="addmoney" name="money" required>
+                                                <input type="hidden" class="form-control" placeholder="" id="idUser" name="idUser">
+                                                <input type="hidden" class="form-control" placeholder="" th:value="${donation.id}" name="idDonation" required>
+                                                <label for="addtext" class="col-form-label">Lời nhắn:</label>
+                                                <textarea rows="10" cols="3" class="form-control" name="text"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                            <button type="submit" class="btn btn-primary">Quyên góp</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="thankYouMessage" style="display: none; text-align: center;">
+                                    <h5>Cảm ơn bạn đã quyên góp vào <span th:text="${donation.organizationName}"></span>!</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </ul>
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${pageNumber == 0 ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{/home-donation(page=${listDonation.number - 1})}">Previous</a>
+                </li>
+                <div th:each="i : ${#numbers.sequence(0, listDonation.totalPages - 1)}">
+                    <li class="page-item" th:classappend="${i==listDonation.number} ? 'active': ''">
+                        <a class="page-link" th:ac th:href="@{home-donation(page=${i})}"
+                           th:text="${i + 1}">
+                        </a>
+                    </li>
+                </div>
+                <li class="page-item"
+                    th:classappend="${pageNumber == listDonation.totalPages-1 ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{/home-donation(page=${listDonation.number + 1})}">Next</a>
+                </li>
+            </ul>
+
+        </div>
+    </section>
+    <footer replace="admin/fragments :: footer" class="py-4 bg-light mt-auto"></footer>
+</div>
+<script>
+    $(document).ready(function() {
+        $('form.donationForm').on('submit', function(event) {
+            event.preventDefault();
+            var form = $(this);
+            var modal = form.closest('.modal');
+            $.ajax({
+                type: form.attr('method'),
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function(response) {
+                    form.hide();
+                    modal.find('.thankYouMessage').show();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error details:', xhr, status, error);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

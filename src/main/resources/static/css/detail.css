@@ -1,0 +1,58 @@
+body {
+    background-color: #f8f9fa;
+    padding: 20px;
+    /*background-image: url('../images/ưhite.jpg');*/
+    background-size: cover ;
+    background-position: center;
+    font-size: large;
+}
+.profile-card {
+    background-color: #c2f1c2;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.table {
+    background-color: #c6e2c6;
+    border: 1px solid #c6e2c6;
+    border-radius: 5px;
+}
+.table th, .table td {
+    padding: 10px;
+    vertical-align: middle;
+}
+/* Custom styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 5px;
+    position: relative;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
