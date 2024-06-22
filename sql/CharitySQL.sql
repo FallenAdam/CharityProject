@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS Assignment_1;
 CREATE DATABASE funix_charity;
 USE funix_charity;
 #password funixasm1
